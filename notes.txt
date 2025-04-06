@@ -1,0 +1,6 @@
+Add a "Press start button" menu to know who is the owner of the current machine.
+	The owner of the current machine will appear in as the main player in the lobbyand will control the lobby, if the main player joins another lobby then it won't be the owner of the lobby.
+	Several players can join the lobby from different devices.
+
+Add the functionality of spawning a number of players equals to the number of players in the lobby in different places.
+Add a server that will recieve the input from players, handles the input and updates the state of the game based on the inputs.
