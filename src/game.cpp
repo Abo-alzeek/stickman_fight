@@ -52,130 +52,64 @@ Game::~Game() {
 }
 
 void Game::handleInput(sf::RenderWindow &window) {
-    sf::Event event;
-    while(window.pollEvent(event)) {
-        switch (event.type)
-        {
-            case sf::Event::Closed:
+    while (const std::optional event = window.pollEvent()) {
+        if (event->is<sf::Event::Closed>()) {
+            window.close();
+        }
+        else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+            if (keyPressed->scancode == sf::Keyboard::Scancode::Escape) {
                 window.close();
+                this->running = false;                
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::A) {
+                this->cam.moveView(sf::Vector2f(-10.0, 0.0));
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::D) {
+                this->cam.moveView(sf::Vector2f(10.0, 0.0));
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::F) {
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::S) {
+                this->cam.moveView(sf::Vector2f(0.0, 10.0));
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::W) {
+                this->cam.moveView(sf::Vector2f(0.0, -10.0));
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Space) {
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Up) {
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Down) {
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Right) {
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Left) {
+            }
+        }
+        else if (const auto* keyReleased = event->getIf<sf::Event::KeyReleased>()) {
+            if (keyReleased->scancode == sf::Keyboard::Scancode::Escape) {
                 this->running = false;
-            break;
-            case sf::Event::KeyPressed:            
-                switch (event.key.code) {
-                    case sf::Keyboard::Escape:
-                        this->running = false;
-                        break;
-                    case sf::Keyboard::A:
-                        this->cam.moveView(sf::Vector2f(-10.0, 0.0));
-
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL && abs(e->cState->state) != Animations::STICKMAN_DAMAGE && abs(e->cState->state) != Animations::STICKMAN_DIE) {
-                        //         e->cState->toUpdate = -1 * Animations::STICKMAN_RUN;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::D:
-                        this->cam.moveView(sf::Vector2f(10.0, 0.0));
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL && abs(e->cState->state) != Animations::STICKMAN_DAMAGE && abs(e->cState->state != Animations::STICKMAN_DIE)) {
-                        //         e->cState->toUpdate = Animations::STICKMAN_RUN;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::F:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL && abs(e->cState->state) != Animations::STICKMAN_DAMAGE && abs(e->cState->state) != Animations::STICKMAN_DIE) {
-                        //         e->cState->toUpdate = Animations::STICKMAN_PUNCH * e->cAnimation->invert;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::S:
-                        this->cam.moveView(sf::Vector2f(0.0, 10.0));
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL && abs(e->cState->state) != Animations::STICKMAN_DAMAGE && abs(e->cState->state != Animations::STICKMAN_DIE)) {
-                        //         e->cState->toUpdate = Animations::STICKMAN_RUN;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::W:
-                        this->cam.moveView(sf::Vector2f(0.0, -10.0));
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL && abs(e->cState->state) != Animations::STICKMAN_DAMAGE && abs(e->cState->state != Animations::STICKMAN_DIE)) {
-                        //         e->cState->toUpdate = Animations::STICKMAN_RUN;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::Space:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL && abs(e->cState->state) != Animations::STICKMAN_DAMAGE && abs(e->cState->state) != Animations::STICKMAN_DIE) {
-                        //         e->cState->toUpdate = Animations::STICKMAN_JUMP * e->cAnimation->invert;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::Up:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL) {
-                        //         e->cInput->idx = (e->cInput->idx + 1) % 10;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::Down:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL) {
-                        //         e->cInput->idx = (e->cInput->idx - 1 + 10) % 10;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::Right:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL) {
-                        //         e->cInput->angle = (e->cInput->angle + 5) % 360;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::Left:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL) {
-                        //         e->cInput->angle = (e->cInput->angle - 5 + 360) % 360;
-                        //     }
-                        // }
-                        break;
-                    default:
-                        break;
-                }
-            break;
-            case sf::Event::KeyReleased:
-                switch (event.key.code) {
-                    case sf::Keyboard::Escape:
-                        this->running = false;
-                        break;
-                    case sf::Keyboard::A:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL) {
-                        //         if(e->cState->state == -1) e->cState->toUpdate = Animations::STICKMAN_IDLE;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    case sf::Keyboard::D:
-                        // for(auto e : m_entities.getEntities()) {
-                        //     if(e->cInput != NULL) {
-                        //         if(e->cState->state == 1) e->cState->toUpdate = Animations::STICKMAN_IDLE;
-                        //         break;
-                        //     }
-                        // }
-                        break;
-                    default:
-                        break;
-                }
-            break;
-        default:
-            break;
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::A) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::D) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::W) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::S) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::F) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::Space) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::Right) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::Left) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::Up) {
+            }
+            else if (keyReleased->scancode == sf::Keyboard::Scancode::Down) {
+            }
         }
     }
 }

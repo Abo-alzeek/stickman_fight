@@ -4,8 +4,8 @@ CXXFLAGS = -std=c++17 -Wall -Wextra -I. -g -fsanitize=address -fsanitize=undefin
 LDFLAGS = -lsfml-graphics -lsfml-window -lsfml-system -fsanitize=address -fsanitize=undefined
 
 # Source files and object files
-# SRCS = main.cpp src/*.cpp
-SRCS = main.cpp src/option.cpp src/button.cpp src/menu.cpp src/mainmenu.cpp src/play.cpp src/controls.cpp src/lobby.cpp src/credits.cpp src/menumanager.cpp src/components.cpp src/Entity.cpp src/EntityManager.cpp src/resourcemanager.cpp src/mymap.cpp src/camera.cpp src/game.cpp
+SRCS = main.cpp $(wildcard src/*.cpp)
+# SRCS = main.cpp src/option.cpp src/button.cpp src/menu.cpp src/mainmenu.cpp src/play.cpp src/controls.cpp src/lobby.cpp src/credits.cpp src/menumanager.cpp src/components.cpp src/Entity.cpp src/EntityManager.cpp src/resourcemanager.cpp src/mymap.cpp src/camera.cpp src/game.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # Target executable

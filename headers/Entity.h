@@ -18,9 +18,9 @@ public:
 	std::shared_ptr<CInput>          			cInput;
 	std::shared_ptr<CTexture>      				cTextrue;
 	std::vector<std::shared_ptr<CCollision>>	cCollision;
-	std::shared_ptr<CAnimation>					cAnimation;
+	// std::shared_ptr<CAnimation>					cAnimation;
 	std::shared_ptr<CTransform>					cTransform;
-	std::shared_ptr<CBones>          			cBones;
+	// std::shared_ptr<CBones>          			cBones;
 	std::shared_ptr<CState>          			cState;
 	std::shared_ptr<CHealth>                    cHealth;
 	std::shared_ptr<CPos>         	            cPos;

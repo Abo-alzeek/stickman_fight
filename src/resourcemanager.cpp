@@ -36,29 +36,28 @@ ResourceManager::ResourceManager() {
     // load tiles
     // {GRASS, DIRT, WATER_SURFACE, UNDER_WATER, BROWN_BRICKS_WALL, GRAY_BRICKS_WALL, WOODEN_BOX};
 
-    sf::Sprite sp;
-    sp.setTexture(this->images[Textures::TILE_TEXTURES]);
+    sf::Sprite sp(this->images[Textures::TILE_TEXTURES]);
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(0, 0, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({0, 0}, {64, 64}));
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(192, 0, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({192, 0}, {64, 64}));
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(256, 0, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({256, 0}, {64, 64}));
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(256, 64, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({256, 64}, {64, 64}));
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(192, 192, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({192, 192}, {64, 64}));
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(192, 256, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({192, 256}, {64, 64}));
 
     this->sprites.push_back(sp);
-    this->sprites.back().setTextureRect(sf::IntRect(256, 320, 64, 64));
+    this->sprites.back().setTextureRect(sf::IntRect({256, 320}, {64, 64}));
 
     // load fonts
     std::cout << "FONTS: \n";
@@ -68,7 +67,7 @@ ResourceManager::ResourceManager() {
             std::cout << "    " << entry.path() << std::endl;
 
             sf::Font f;
-            if(!f.loadFromFile(entry.path())) {
+            if(!f.openFromFile(entry.path())) {
                 std::cout << "Unable to load font '" << entry.path() << "'" << std::endl;
             }
             else this->fonts.push_back(f);

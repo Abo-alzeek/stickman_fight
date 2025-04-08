@@ -5,7 +5,7 @@ Entity::Entity() {
 	cInput = NULL;
 	cTextrue = NULL;
 	cCollision.clear();
-	cAnimation = NULL;
+	// cAnimation = NULL;
 	cTransform = NULL;
 	cHealth = NULL;
 	// zob = NULL;
@@ -15,7 +15,7 @@ Entity::~Entity() {
 	cInput = NULL;
 	cTextrue = NULL;
 	cCollision.clear();
-	cAnimation = NULL;
+	// cAnimation = NULL;
 	cTransform = NULL;
 	cHealth = NULL;
 	// zob = NULL;
