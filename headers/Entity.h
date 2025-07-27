@@ -16,7 +16,7 @@ public:
 	Entity(const size_t id, std::shared_ptr<std::string> tag);
 
 	std::shared_ptr<CInput>          			cInput;
-	std::shared_ptr<CTexture>      				cTextrue;
+	std::shared_ptr<CTexture>      				cTexture;
 	std::vector<std::shared_ptr<CCollision>>	cCollision;
 	// std::shared_ptr<CAnimation>					cAnimation;
 	std::shared_ptr<CTransform>					cTransform;

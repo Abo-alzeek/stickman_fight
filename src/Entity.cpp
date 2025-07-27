@@ -3,7 +3,7 @@
 Entity::Entity() {
 	// std::cout << "ENTITIY CREATED\n";
 	cInput = NULL;
-	cTextrue = NULL;
+	cTexture = NULL;
 	cCollision.clear();
 	// cAnimation = NULL;
 	cTransform = NULL;
@@ -13,7 +13,7 @@ Entity::Entity() {
 
 Entity::~Entity() {
 	cInput = NULL;
-	cTextrue = NULL;
+	cTexture = NULL;
 	cCollision.clear();
 	// cAnimation = NULL;
 	cTransform = NULL;

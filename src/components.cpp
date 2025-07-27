@@ -38,14 +38,15 @@ void CTransform::move(sf::Vector2f &pos) {
     pos += this->velocity;
 }
 
-void CTransform::setVelocity(sf::Vector2f &velo) {
+void CTransform::setVelocity(const sf::Vector2f &velo) {
     this->velocity = velo;
 }
-void CTransform::updateVelocity(sf::Vector2f &velo) {
+
+void CTransform::updateVelocity(const sf::Vector2f &velo) {
     this->velocity += velo;
 }
 
-void CTransform::setGravity(sf::Vector2f &gr) {
+void CTransform::setGravity(const sf::Vector2f &gr) {
     this->gravity = gr;
 }
 
@@ -66,7 +67,7 @@ CCollision::CCollision(sf::Vector2f topLeft, float width, float height) {
 
 }
 
-void CCollision::updatePosition(sf::Vector2f &pos)  {
+void CCollision::updatePosition(const sf::Vector2f &pos)  {
     this->boundingBox.setPosition(pos);
 }
 

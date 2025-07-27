@@ -11,7 +11,7 @@ int main() {
 
     static ResourceManager RM;
 
-    Game game(std::make_shared<ResourceManager>(RM), 0, window, WIDTH, HEIGHT);
+    Game game(RM, 0, window, WIDTH, HEIGHT);
 
     while(window.isOpen()) {
         window.clear();

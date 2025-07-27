@@ -1,6 +1,10 @@
 #include "../headers/EntityManager.h"
+#include <algorithm>
 
 EntityManager::EntityManager() {
+	// Reserve capacity to avoid frequent reallocations
+	m_entities.reserve(1000);
+	m_toAdd.reserve(100);
 	// std::cout << "ENTITIY MANAGER CREATED\n";
 	;
 }
@@ -12,6 +16,7 @@ std::shared_ptr<Entity> EntityManager::addEntity(std::shared_ptr<std::string> ta
 }
 
 void EntityManager::update() {
+	// Add new entities
 	for(auto e : this->m_toAdd) {
 		m_entities.push_back(e);
 		m_entityMap[e->tag()->c_str()].push_back(e);
@@ -26,6 +31,7 @@ void EntityManager::update() {
 		}
 	}
 
+	// Remove inactive entities from entity map
 	for(auto &element : this->m_entityMap) {
 		for(int i = 0;i < (int)element.second.size();i++) {
 			if(!element.second[i]->isActive()) {

@@ -1,8 +1,6 @@
 #ifndef Components_h_
 #define Components_h_
 
-// #include "basic.h"
-
 #include <memory>
 #include <iostream>
 #include <math.h>
@@ -30,9 +28,9 @@ public:
     ~CTransform();
     CTransform(sf::Vector2f, sf::Vector2f);
 
-    void setGravity(sf::Vector2f &);
-    void setVelocity(sf::Vector2f &);
-    void updateVelocity(sf::Vector2f &);
+    void setGravity(const sf::Vector2f &);
+    void setVelocity(const sf::Vector2f &);
+    void updateVelocity(const sf::Vector2f &);
 
     void move(sf::Vector2f &);
 };
@@ -45,7 +43,7 @@ public:
 	CCollision(sf::Vector2f, float, float);
     ~CCollision();
 
-    void updatePosition(sf::Vector2f &);
+    void updatePosition(const sf::Vector2f &);
 };
 
 class CTexture {
