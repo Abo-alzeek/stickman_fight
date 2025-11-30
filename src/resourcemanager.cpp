@@ -31,24 +31,16 @@ ResourceManager::ResourceManager() {
     
     // Load tile sprites (files starting with "tile_")
     std::cout << "Loading tile sprites..." << std::endl;
-    loadIndividualSprites(imagesDir, "tile_", m_sprites);
+    loadTextures(imagesDir + "/tiles", "tile_", m_tiles);
     
     // Load character sprites (files starting with "character_")
     std::cout << "Loading character sprites..." << std::endl;
-    loadIndividualSprites(imagesDir, "character_", m_characters);
-    
-    // Load other sprites (files starting with "other_")
-    std::cout << "Loading other sprites..." << std::endl;
-    loadIndividualSprites(imagesDir, "other_", m_others);
-    
+    loadTextures(imagesDir + "/characters", "character_", m_characters);
+        
     // Load background sprites (files starting with "background_")
     std::cout << "Loading background sprites..." << std::endl;
-    loadIndividualSprites(imagesDir, "background_", m_others);
+    loadTextures(imagesDir + "/backgrounds", "background_", m_backgrounds);
     
-    // Load textures (files starting with "texture_")
-    std::cout << "Loading textures..." << std::endl;
-    loadTextures(imagesDir);
-
     // Load fonts
     std::cout << "FONTS: " << std::endl;
     try {
@@ -104,6 +96,8 @@ ResourceManager::ResourceManager() {
         std::cerr << " -> Error: " << e.what() << std::endl;
     }
 
+    this->print_loaded_resources();
+
     std::cout << "----------------------------------------------------" << std::endl;
     std::cout << "----------------------------------------------------" << std::endl;
 }
@@ -111,8 +105,8 @@ ResourceManager::ResourceManager() {
 ResourceManager::~ResourceManager() {
 }
 
-// Helper function to load individual sprites with specific prefix
-void ResourceManager::loadIndividualSprites(const std::string& directory, const std::string& prefix, std::vector<sf::Sprite>& target_vector) {
+// Load textures (files starting with "texture_")
+void ResourceManager::loadTextures(const std::string& directory, const std::string& prefix, std::vector<sf::Texture>& target_vector) {
     try {
         std::vector<std::pair<int, std::string>> files; // (number, filename)
         
@@ -135,58 +129,18 @@ void ResourceManager::loadIndividualSprites(const std::string& directory, const 
         
         // Sort files by number to ensure consistent loading order
         sort(files.begin(), files.end());
-        
-        // Load each file
+                
         for (const auto& [number, filepath] : files) {
             sf::Texture texture;
             if (texture.loadFromFile(filepath)) {
-                sf::Sprite sprite(texture);
-                target_vector.push_back(sprite);
+                target_vector.push_back(texture);
                 std::cout << "    Loaded: " << std::filesystem::path(filepath).filename().string() << std::endl;
             } else {
                 std::cout << "    Failed to load: " << std::filesystem::path(filepath).filename().string() << std::endl;
             }
         }
         
-        std::cout << "    Total " << prefix << " sprites loaded: " << target_vector.size() << std::endl;
-        
-    } catch (const std::filesystem::filesystem_error& e) {
-        std::cerr << "Error loading " << prefix << " sprites: " << e.what() << std::endl;
-    }
-}
-
-// Load textures (files starting with "texture_")
-void ResourceManager::loadTextures(const std::string& directory) {
-    try {
-        std::vector<std::pair<int, std::string>> files;
-        
-        for (const auto& entry : std::filesystem::directory_iterator(directory)) {
-            std::string filename = entry.path().filename().string();
-            
-            if (filename.substr(0, 8) == "texture_" && 
-                filename.substr(filename.length() - 4) == ".png") {
-                
-                std::string numberStr = filename.substr(8);
-                numberStr = numberStr.substr(0, numberStr.length() - 4);
-                
-                int number = toNumber(numberStr);
-                files.push_back({number, entry.path().string()});
-            }
-        }
-        
-        sort(files.begin(), files.end());
-        
-        for (const auto& [number, filepath] : files) {
-            sf::Texture texture;
-            if (texture.loadFromFile(filepath)) {
-                m_textures.push_back(texture);
-                std::cout << "    Loaded: " << std::filesystem::path(filepath).filename().string() << std::endl;
-            } else {
-                std::cout << "    Failed to load: " << std::filesystem::path(filepath).filename().string() << std::endl;
-            }
-        }
-        
-        std::cout << "    Total textures loaded: " << m_textures.size() << std::endl;
+        std::cout << "    Total " << prefix << " loaded: " << target_vector.size() << std::endl;
         
     } catch (const std::filesystem::filesystem_error& e) {
         std::cerr << "Error loading textures: " << e.what() << std::endl;
@@ -194,33 +148,25 @@ void ResourceManager::loadTextures(const std::string& directory) {
 }
 
 // Texture getters
-const sf::Texture& ResourceManager::get_texture(Textures texture_id) const {
-    if (static_cast<size_t>(texture_id) < m_textures.size()) {
-        return m_textures[texture_id];
+const sf::Texture& ResourceManager::get_background(int background_id) const {
+    if (static_cast<size_t>(background_id) < m_backgrounds.size()) {
+        return m_backgrounds[background_id];
     }
     throw std::out_of_range("Texture ID out of range");
 }
 
-// Sprite getters
-const sf::Sprite& ResourceManager::get_sprite(Sprites sprite_id) const {
-    if (static_cast<size_t>(sprite_id) < m_sprites.size()) {
-        return m_sprites[sprite_id];
-    }
-    throw std::out_of_range("Sprite ID out of range");
-}
-
-const sf::Sprite& ResourceManager::get_character(Characters character_id) const {
+const sf::Texture& ResourceManager::get_character(int character_id) const {
     if (static_cast<size_t>(character_id) < m_characters.size()) {
         return m_characters[character_id];
     }
     throw std::out_of_range("Character ID out of range");
 }
 
-const sf::Sprite& ResourceManager::get_other(Others other_id) const {
-    if (static_cast<size_t>(other_id) < m_others.size()) {
-        return m_others[other_id];
+const sf::Texture& ResourceManager::get_tile(int tile_id) const {
+    if (static_cast<size_t>(tile_id) < m_tiles.size()) {
+        return m_tiles[tile_id];
     }
-    throw std::out_of_range("Other sprite ID out of range");
+    throw std::out_of_range("Character ID out of range");
 }
 
 // Font getters
@@ -243,18 +189,12 @@ size_t ResourceManager::get_map_count() const {
     return m_maps.size();
 }
 
-// Background getter (for backward compatibility)
-const sf::Sprite& ResourceManager::get_background_sprite() const {
-    return get_other(Others::BACKGROUND_SPRITE);
-}
-
 // Debug functions
 void ResourceManager::print_loaded_resources() const {
     std::cout << "Loaded Resources:" << std::endl;
-    std::cout << "  Textures: " << m_textures.size() << std::endl;
-    std::cout << "  Sprites: " << m_sprites.size() << std::endl;
     std::cout << "  Characters: " << m_characters.size() << std::endl;
-    std::cout << "  Others: " << m_others.size() << std::endl;
+    std::cout << "  Tiles: " << m_tiles.size() << std::endl;
+    std::cout << "  Backgrounds: " << m_backgrounds.size() << std::endl;
     std::cout << "  Fonts: " << m_fonts.size() << std::endl;
     std::cout << "  Maps: " << m_maps.size() << std::endl;
 }

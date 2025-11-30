@@ -12,14 +12,7 @@ int main() {
     static ResourceManager RM;
 
     Game game(RM, 0, window, WIDTH, HEIGHT);
-
-    while(window.isOpen()) {
-        window.clear();
-
-    
-
-        window.display();
-    }
+    game.run(window);
 
     return 0;
 }

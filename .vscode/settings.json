@@ -79,7 +79,10 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "*.rh": "cpp"
+        "*.rh": "cpp",
+        "complex": "cpp",
+        "queue": "cpp",
+        "ranges": "cpp"
     },
     "makefile.configureOnOpen": true
 }

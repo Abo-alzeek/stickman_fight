@@ -4,6 +4,7 @@
 const float TILE_SIZE = 64.0f;
 const float CAMERA_MOVE_SPEED = 10.0f;
 const float PLAYER_OFFSET = 32.0f;
+float MAP_HEIGT, MAP_WIDTH;
 
 // Static string constants to reduce memory allocations
 static const std::string TILE_TAG = "TILE";
@@ -14,30 +15,25 @@ Game::Game(ResourceManager& rm, int x, sf::RenderWindow &window, int screen_widt
     : m_resources(rm) {  // Initialize reference member in initialization list
     std::vector<sf::Vector2f> spawning_points;
     this->map = std::make_shared<MyMap>(m_resources.get_map(x));
+    MAP_HEIGT = map->tiles.size();
+    MAP_WIDTH = map->tiles[0].size();
     
     for(size_t i = 0; i < this->map->tiles.size(); i++) {
         for(size_t j = 0; j < this->map->tiles[i].size(); j++) {
-            // std::cout << this->map->tiles[i][j] << " ";
+            std::cout << this->map->tiles[i][j] << " ";
 
             if(this->map->tiles[i][j] == -1) {
-                spawning_points.push_back(sf::Vector2f(j * TILE_SIZE, i * TILE_SIZE));
+                spawning_points.push_back(sf::Vector2f(j * TILE_SIZE + (TILE_SIZE/2.0), i * TILE_SIZE + TILE_SIZE/2.0));
             }
             else if(this->map->tiles[i][j] != Tiles::NOTHING) {
                 auto e = this->m_entities.addEntity(std::make_shared<std::string>(TILE_TAG));
 
                 e->cPos = std::make_shared<CPos>(j * TILE_SIZE, i * TILE_SIZE);
-                e->cCollision.push_back(std::make_shared<CCollision>(e->cPos->position, TILE_SIZE, TILE_SIZE));
-                
-                // Map tile types to sprite indices - now using individual tile files
-                int tileType = this->map->tiles[i][j];
-                if (tileType >= 0) {
-                    e->cTexture = std::make_shared<CTexture>(tileType);
-                } else {
-                    e->cTexture = std::make_shared<CTexture>(0); // Default to first tile
-                }
+                e->cCollision.push_back(std::make_shared<CCollision>(e->cPos->position, TILE_SIZE, TILE_SIZE));                
+                e->cTexture = std::make_shared<CTexture>(this->map->tiles[i][j]);
             }
         }
-        // std::cout << std::endl;
+        std::cout << std::endl;
     }
 
     // Fix: Add bounds checking for spawn points
@@ -45,14 +41,18 @@ Game::Game(ResourceManager& rm, int x, sf::RenderWindow &window, int screen_widt
         // Fallback to a default position if no spawn points found
         spawning_points.push_back(sf::Vector2f(0.0f, 0.0f));
     }
-    
-    // Create multiple characters at spawn points
-    createMultipleCharacters(spawning_points);
-    
+
+    // std::cout << " CREATING CHARACTERS" << std::endl;
+    // //Create multiple characters at spawn points
+    // createMultipleCharacters(spawning_points);
+
+    std::cout << " SETTING CAMERA" << std::endl;
     // Set camera to first character position
     sf::Vector2f firstPos = spawning_points[0];
     this->cam = Camera(this->map->tiles[0].size() * TILE_SIZE, this->map->tiles.size() * TILE_SIZE, screen_width, screen_height, firstPos);
     
+    std::cout << " -> ALL SET UP !! <- " << std::endl;
+
     this->run(window);
 }
 
@@ -132,20 +132,31 @@ void Game::checkCollisions(sf::RenderWindow &) {
 }
 
 void Game::render(sf::RenderWindow &window) {
-    window.clear(sf::Color(255, 255, 255, 255));
+    window.clear(sf::Color(255, 0, 255, 255));
+
+    // Set camera view before drawing
+    window.setView(this->cam.view);
+    // window.setView(window.getDefaultView());
 
     // Draw background (if available)
     try {
-        window.draw(m_resources.get_background_sprite());
+        sf::Sprite bgSprite(m_resources.get_background(0));
+        // Position background at origin
+        bgSprite.setPosition(sf::Vector2f(0.0f, 0.0f));
+        float scaleX = MAP_WIDTH / bgSprite.getScale().x;
+        float scaleY = MAP_WIDTH / bgSprite.getScale().y;
+        bgSprite.setScale(sf::Vector2f(scaleX, scaleY));
+        window.draw(bgSprite);
     } catch (const std::out_of_range&) {
         // No background sprite available, continue
+        std::cout << "Warning: Background was not found!!" << std::endl;
     }
 
     // Draw tiles
     for(auto e : m_entities.getEntities(TILE_TAG)) {
         if (e->cTexture && e->cTexture->sprite >= 0) {
             try {
-                sf::Sprite tileSprite = m_resources.get_sprite(static_cast<Sprites>(e->cTexture->sprite));
+                sf::Sprite tileSprite(m_resources.get_tile(e->cTexture->sprite));
                 tileSprite.setPosition(e->cPos->position);
                 window.draw(tileSprite);
             } catch (const std::out_of_range&) {
@@ -153,13 +164,14 @@ void Game::render(sf::RenderWindow &window) {
                 std::cout << "Warning: Tile sprite " << e->cTexture->sprite << " not found" << std::endl;
             }
         }
+        else std::cout << "THERE IS AN ERROR HERE !!!" << std::endl;
     }
 
     // Draw characters
     for(auto e : m_entities.getEntities(STICKMAN_TAG)) {
         if (e->cTexture) {
             try {
-                sf::Sprite characterSprite = m_resources.get_character(Characters::CHARACTER_DEMO);
+                sf::Sprite characterSprite(m_resources.get_character(Characters::CHARACTER_DEMO));
                 characterSprite.setPosition(e->cPos->position);
                 window.draw(characterSprite);
             } catch (const std::out_of_range&) {
@@ -168,8 +180,6 @@ void Game::render(sf::RenderWindow &window) {
             }
         }
     }
-
-    window.setView(this->cam.view);
 
     window.display();
 }

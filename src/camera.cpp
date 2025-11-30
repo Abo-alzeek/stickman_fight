@@ -13,7 +13,9 @@ Camera::Camera(int map_width, int map_height, int view_width, int view_height, s
     this->map.setSize(sf::Vector2f((float)map_width, (float)map_height));
     this->map.setPosition(sf::Vector2f(0, 0));
 
-    this->view = sf::View(sf::FloatRect(sf::Vector2f((view_location.x + VIEW_OFFSET) - view_width/2.0, (view_location.y + VIEW_OFFSET)- view_height/2.0), sf::Vector2f(view_width, view_height)));
+    // Create view centered on view_location
+    this->view.setSize(sf::Vector2f((float)view_width, (float)view_height));
+    this->view.setCenter(sf::Vector2f(view_location.x + VIEW_OFFSET, view_location.y + VIEW_OFFSET));
 }
 
 Camera::~Camera() {
